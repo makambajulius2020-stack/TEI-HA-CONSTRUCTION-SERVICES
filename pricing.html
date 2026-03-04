@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope:wght@400;500;700;800" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>Pricing - TEI-HA AI Tools</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#1173d4",
+          "background-light": "#f6f7f8",
+          "background-dark": "#101922",
+          "content-light": "#1f2937",
+          "content-dark": "#e5e7eb",
+          "subtle-light": "#6b7280",
+          "subtle-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#374151",
+        },
+        fontFamily: { display: ["Manrope", "sans-serif"] },
+      }
+    }
+  }
+</script>
+<style>
+  h1,h2,h3,h4,h5,h6 { font-family: 'Playfair Display', serif; }
+  .btn-primary { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; background:#1173d4; color:#fff; border-radius:12px; }
+  .btn-primary:hover { background:#0e63b6 }
+  .toggle { padding:6px 10px; border-radius:9999px; }
+  .toggle button { padding:6px 12px; border-radius:9999px; }
+  .toggle .active { background:#fff; color:#111827; }
+  .plan-card { border:1px solid #e5e7eb; border-radius:16px; background:#fff; }
+  .price { font-size:32px; font-weight:800; }
+  .currency { font-size:14px; color:#6b7280; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,23,42,0.65); display:flex; align-items:center; justify-content:center; padding:16px; z-index:1000; }
+  .modal-panel { width:100%; max-width:420px; background:#fff; border-radius:16px; box-shadow:0 25px 45px rgba(15,23,42,0.25); padding:24px; }
+  body.dark .modal-panel { background:#1f2937; color:#f9fafb; }
+  .mobile-nav-panel { position:fixed; top:64px; left:0; right:0; background:#fff; border-bottom:1px solid rgba(59,130,246,0.25); box-shadow:0 12px 30px rgba(15,23,42,0.15); z-index:60; }
+  body.dark .mobile-nav-panel { background:#111827; border-color:rgba(59,130,246,0.35); }
+
+  /* Phone Modal Styles */
+.phone-input-card {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.phone-input {
+  transition: all 0.2s;
+}
+
+.phone-input:focus {
+  box-shadow: 0 0 0 3px rgba(17, 115, 212, 0.1);
+}
+
+.phone-input.valid {
+  border-color: #10b981;
+}
+
+.phone-input.invalid {
+  border-color: #ef4444;
+}
+
+/* Dark mode adjustments */
+body.dark .phone-input-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+body.dark .phone-input {
+  background: #111827;
+}
+
+body.dark .network-guide {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Payment processing improvements */
+@keyframes progress {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+.animate-progress {
+    animation: progress 30s linear forwards;
+}
+
+/* Pulse animation for status */
+@keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 2s ease-in-out infinite;
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.animate-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Optimize modal transitions */
+.modal-panel {
+    transition: all 0.3s ease-out;
+}
+
+/* Dark mode optimizations */
+body.dark .modal-panel {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+}
+
+/* Network-specific colors */
+.mtn-gradient {
+    background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);
+}
+
+.airtel-gradient {
+    background: linear-gradient(135deg, #E21818 0%, #FF6B6B 100%);
+}
+
+/* Loading spinner */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body class="bg-background-light text-content-light dark:bg-background-dark dark:text-content-dark">
+  <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+    <header class="top-0 z-50 w-full bg-blue-600/95 backdrop-blur-md border-b border-blue-500/20 fixed transition-all duration-300" id="header">
+      <div class="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-[8px]">
+        <a href="index.html#home" class="flex items-center gap-3 group">
+          <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center overflow-hidden">
+            <img src="images/logo.png" alt="TEI-HA Logo" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <h2 class="sm:block text-lg font-bold text-white tracking-tight">TEI-HA Construction Services Ltd</h2>
+            <p class="text-xs text-yellow-300 font-medium">Quality is our priority</p>
+          </div>
+        </a>
+        <nav class="hidden lg:flex items-center gap-6">
+          <a class="nav-link text-white" href="index.html#home">Home</a>
+          <a class="nav-link text-white" href="index.html#services">Services</a>
+          <a class="nav-link text-white" href="index.html#portfolio">Portfolio</a>
+          <a class="nav-link text-white" href="index.html#about">About Us</a>
+          <a class="nav-link text-white" href="index.html#contact">Contact</a>
+          <a class="nav-link text-white" href="ai-tools.html">AI Tools</a>
+          <a href="index.html#contact" class="ml-2 btn-primary">Get a Quote</a>
+        </nav>
+        <div class="lg:hidden flex items-center gap-2">
+          <a href="index.html" class="p-2 rounded-md text-white hover:bg-white/20 transition-all duration-300 transform hover:scale-110" aria-label="Back to Home">
+            <i class="fas fa-home"></i>
+          </a>
+          <button id="pricing-mobile-nav-toggle" class="p-2 rounded-md text-white hover:bg-white/20 transition-all duration-300 focus:outline-none" aria-label="Open navigation menu" aria-expanded="false">
+            <i id="pricing-mobile-nav-icon" class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <nav id="pricing-mobile-nav" class="mobile-nav-panel lg:hidden hidden">
+      <div class="flex flex-col px-4 py-4 space-y-3 text-base font-semibold">
+        <a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#home"><i class="fas fa-home text-primary"></i> Home</a>
+        <a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#services"><i class="fas fa-toolbox text-primary"></i> Services</a>
+        <a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#portfolio"><i class="fas fa-th-large text-primary"></i> Portfolio</a>
+        <a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#about"><i class="fas fa-users text-primary"></i> About Us</a>
+        <a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#contact"><i class="fas fa-envelope text-primary"></i> Contact</a>
+        <a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="ai-tools.html"><i class="fas fa-microchip text-primary"></i> AI Tools</a>
+        <a class="btn-primary justify-center" href="index.html#contact">Get a Quote</a>
+      </div>
+    </nav>
+
+    <main class="flex-grow">
+      <section class="pt-28 sm:pt-32 pb-10">
+        <div class="container mx-auto px-4">
+          <div class="text-center max-w-3xl mx-auto">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-3">
+              <span class="bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">Pricing</span>
+            </h1>
+            <p class="text-subtle-light dark:text-subtle-dark">Choose a plan that fits your project. Switch currency and billing cycle to compare.</p>
+          </div>
+          <div class="mt-6 flex items-center justify-center gap-4">
+            <div class="toggle bg-white dark:bg-gray-800 border border-border-light dark:border-border-dark flex">
+              <button id="toggle-UGX" class="active">UGX</button>
+              <button id="toggle-USD" class="">USD</button>
+            </div>
+            <div class="toggle bg-white dark:bg-gray-800 border border-border-light dark:border-border-dark flex">
+              <button id="toggle-week" class="">Weekly</button>
+              <button id="toggle-month" class="active">Monthly</button>
+              <button id="toggle-year" class="">Yearly</button>
+            </div>
+          </div>
+
+          <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="plan-card p-6">
+              <h3 class="text-xl font-bold mb-2">Free</h3>
+              <div class="price-row flex items-end gap-2 mb-2">
+                <span id="price-free" class="price">UGX 0</span><span class="currency" id="cycle-free">/mo</span>
+              </div>
+              <ul class="text-sm text-subtle-light dark:text-subtle-dark space-y-2 mb-4">
+                <li>Limited requests</li>
+                <li>Standard queue</li>
+                <li>Basic support</li>
+              </ul>
+              <button class="btn-primary w-full" onclick="startFreePlan()">Get Started</button>
+            </div>
+
+            <div class="plan-card p-6 border-2 border-primary">
+              <h3 class="text-xl font-bold mb-2">Pro</h3>
+              <div class="price-row flex items-end gap-2 mb-2">
+                <span id="price-pro" class="price">UGX 35,000</span><span class="currency" id="cycle-pro">/mo</span>
+              </div>
+              <ul class="text-sm text-subtle-light dark:text-subtle-dark space-y-2 mb-4">
+                <li>Higher limits</li>
+                <li>Priority queue</li>
+                <li>Email support</li>
+              </ul>
+              <button class="btn-primary w-full" onclick="openPaymentModal('pro')">Choose Pro</button>
+            </div>
+
+            <div class="plan-card p-6">
+              <h3 class="text-xl font-bold mb-2">Max</h3>
+              <div class="price-row flex items-end gap-2 mb-2">
+                <span id="price-max" class="price">UGX 95,000</span><span class="currency" id="cycle-max">/mo</span>
+              </div>
+              <ul class="text-sm text-subtle-light dark:text-subtle-dark space-y-2 mb-4">
+                <li>Highest limits</li>
+                <li>Fastest queue</li>
+                <li>Priority support</li>
+              </ul>
+              <button class="btn-primary w-full" onclick="openPaymentModal('max')">Choose Max</button>
+            </div>
+          </div>
+
+          <div id="pricing-alert" class="mt-6 text-center text-sm text-green-700 hidden"></div>
+
+          <!-- Payment Methods Section -->
+          <div class="mt-12 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-bold text-center mb-6">Select Payment Method</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <button onclick="payStripe()" class="btn-primary w-full flex items-center justify-center gap-2 py-4 text-lg">
+    <i class="fab fa-cc-stripe"></i>
+    Pay with Card
+</button>
+<button onclick="payMtn()" class="btn-primary w-full flex items-center justify-center gap-2 py-4 text-lg" style="background: #FFC107; color: #000;">
+    <i class="fas fa-mobile-alt"></i>
+    MTN Mobile Money
+</button>
+<button onclick="payAirtel()" class="btn-primary w-full flex items-center justify-center gap-2 py-4 text-lg" style="background: #E21818; color: #fff;">
+    <i class="fas fa-mobile-alt"></i>
+    Airtel Money
+</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="email-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="email-modal-title">
+      <div class="modal-panel relative">
+        <button id="close-email-modal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600" aria-label="Close email prompt">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="space-y-4">
+          <div>
+            <h3 id="email-modal-title" class="text-xl font-semibold">Sign in to continue</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-300">Enter the email you use on AI Tools so we can start checkout for your selected plan.</p>
+          </div>
+          <form id="email-capture-form" class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200" for="email-input">Email address</label>
+            <input id="email-input" type="email" required class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" placeholder="you@example.com" />
+            <button type="submit" class="btn-primary w-full justify-center">Continue to checkout</button>
+          </form>
+          <p class="text-xs text-gray-500 dark:text-gray-400">We store this locally so you only enter it once.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="payment-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+      <div class="modal-panel relative">
+        <button id="close-payment-modal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600" aria-label="Close payment options">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm uppercase tracking-wide text-primary font-semibold" id="selected-plan-label">Pro Plan</p>
+            <h3 id="payment-modal-title" class="text-xl font-semibold">Choose how you'd like to pay</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-300">Select a payment method to continue checkout for this plan.</p>
+          </div>
+          <div class="space-y-3">
+    <button class="btn-primary w-full justify-between" onclick="payStripe()">
+        <span><i class="fab fa-cc-stripe mr-2"></i>Pay with Card</span>
+        <i class="fas fa-chevron-right text-white/70"></i>
+    </button>
+    <button class="btn-primary w-full justify-between" style="background:#FFC107; color:#111827;" onclick="payMtn()">
+        <span><i class="fas fa-mobile-alt mr-2"></i>MTN Mobile Money</span>
+        <i class="fas fa-chevron-right text-black/60"></i>
+    </button>
+    <button class="btn-primary w-full justify-between" style="background:#E21818;" onclick="payAirtel()">
+        <span><i class="fas fa-mobile-alt mr-2"></i>Airtel Money</span>
+        <i class="fas fa-chevron-right text-white/70"></i>
+    </button>
+</div>
+        
+      </div>
+    </div>
+    </div>
+
+    <footer class="w-full bg-gray-900 text-white py-6 md:py-8">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10 mb-6 md:mb-10">
+          <div class="col-span-1 md:col-span-2">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center overflow-hidden">
+                <img src="images/logo.png" alt="TEI-HA Logo" class="w-full h-full object-cover">
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold">TEI-HA Construction Services Ltd</h3>
+                <p class="text-yellow-400 text-sm font-medium">Quality is our priority</p>
+              </div>
+            </div>
+            <p class="text-gray-400 mb-4 max-w-md">Building the future with AI-powered precision and human expertise.</p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 md:mb-6 text-yellow-400">Quick Links</h4>
+            <ul class="space-y-2 md:space-y-3">
+              <li><a href="index.html#home" class="footer-link">Home</a></li>
+              <li><a href="index.html#services" class="footer-link">Services</a></li>
+              <li><a href="ai-tools.html" class="footer-link">AI Tools</a></li>
+              <li><a href="pricing.html" class="footer-link">Pricing</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 md:mb-6 text-yellow-400">Contact</h4>
+            <ul class="space-y-2 md:space-y-3 text-gray-400">
+              <li>teihaconstructionservices@gmail.com</li>
+              <li>Nansana - Wakiso, Uganda</li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 pt-4 md:pt-6 text-center">
+          <p class="text-gray-400 mb-2">© 2026 TEI-HA Construction Services Ltd. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const BILLING_API_BASE = 'http://localhost:8000/api/billing';
+    let currency = 'UGX';
+    let cycle = 'month';
+    let pendingAction = null;
+    let selectedPlan = null;
+    const emailModal = document.getElementById('email-modal');
+    const emailInput = document.getElementById('email-input');
+    const emailForm = document.getElementById('email-capture-form');
+    const modalCloseBtn = document.getElementById('close-email-modal');
+    const pricingAlert = document.getElementById('pricing-alert');
+    const pricingMobileToggle = document.getElementById('pricing-mobile-nav-toggle');
+    const pricingMobileIcon = document.getElementById('pricing-mobile-nav-icon');
+    const pricingMobileNav = document.getElementById('pricing-mobile-nav');
+    const mobileNavLinks = pricingMobileNav ? pricingMobileNav.querySelectorAll('a') : [];
+    const paymentModal = document.getElementById('payment-modal');
+    const paymentModalCloseBtn = document.getElementById('close-payment-modal');
+    const selectedPlanLabel = document.getElementById('selected-plan-label');
+
+    const prices = {
+      UGX: {
+        week: { free: 0, pro: 10000, max: 30000 },
+        month:{ free: 0, pro: 35000, max: 95000 },
+        year: { free: 0, pro: 350000, max: 950000 },
+      },
+      USD: {
+        week: { free: 0, pro: 3.49, max: 8.99 },
+        month:{ free: 0, pro: 9.99, max: 24.99 },
+        year: { free: 0, pro: 99, max: 239 },
+      }
+    };
+
+    function formatPrice(curr, value) {
+      if (curr === 'UGX') return `UGX ${value.toLocaleString('en-UG')}`;
+      return `$${value}`;
+    }
+    function getStoredEmail() {
+      return localStorage.getItem('teiha_user_email') || sessionStorage.getItem('teiha_user_email') || '';
+    }
+    function storeEmail(email) {
+      localStorage.setItem('teiha_user_email', email);
+      sessionStorage.setItem('teiha_user_email', email);
+    }
+    function updatePrices() {
+      document.getElementById('price-free').textContent = formatPrice(currency, prices[currency][cycle].free);
+      document.getElementById('price-pro').textContent = formatPrice(currency, prices[currency][cycle].pro);
+      document.getElementById('price-max').textContent = formatPrice(currency, prices[currency][cycle].max);
+      const cycleLabel = cycle === 'week' ? '/wk' : (cycle === 'year' ? '/yr' : '/mo');
+      document.getElementById('cycle-free').textContent = cycleLabel;
+      document.getElementById('cycle-pro').textContent = cycleLabel;
+      document.getElementById('cycle-max').textContent = cycleLabel;
+      document.getElementById('toggle-UGX').classList.toggle('active', currency==='UGX');
+      document.getElementById('toggle-USD').classList.toggle('active', currency==='USD');
+      document.getElementById('toggle-week').classList.toggle('active', cycle==='week');
+      document.getElementById('toggle-month').classList.toggle('active', cycle==='month');
+      document.getElementById('toggle-year').classList.toggle('active', cycle==='year');
+    }
+    function setPricingMobileNav(open) {
+      if (!pricingMobileNav || !pricingMobileToggle || !pricingMobileIcon) return;
+      pricingMobileNav.classList.toggle('hidden', !open);
+      document.body.classList.toggle('overflow-hidden', open);
+      pricingMobileToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      pricingMobileIcon.classList.toggle('fa-bars', !open);
+      pricingMobileIcon.classList.toggle('fa-times', open);
+    }
+    function togglePricingMobileNav() {
+      if (!pricingMobileNav) return;
+      const isHidden = pricingMobileNav.classList.contains('hidden');
+      setPricingMobileNav(isHidden);
+    }
+    document.getElementById('toggle-UGX').addEventListener('click', ()=>{ currency='UGX'; updatePrices(); });
+    document.getElementById('toggle-USD').addEventListener('click', ()=>{ currency='USD'; updatePrices(); });
+    document.getElementById('toggle-week').addEventListener('click', ()=>{ cycle='week'; updatePrices(); });
+    document.getElementById('toggle-month').addEventListener('click', ()=>{ cycle='month'; updatePrices(); });
+    document.getElementById('toggle-year').addEventListener('click', ()=>{ cycle='year'; updatePrices(); });
+    pricingMobileToggle?.addEventListener('click', togglePricingMobileNav);
+    mobileNavLinks.forEach(link => link.addEventListener('click', () => setPricingMobileNav(false)));
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) setPricingMobileNav(false);
+    });
+    updatePrices();
+
+    function openEmailModal() {
+      pricingAlert.classList.add('hidden');
+      emailInput.value = getStoredEmail() || '';
+      emailModal.classList.remove('hidden');
+      setTimeout(() => emailInput.focus(), 50);
+    }
+    function closeEmailModal() {
+      emailModal.classList.add('hidden');
+    }
+    function requireEmail(action) {
+      const email = getStoredEmail();
+      if (email) return email;
+      pendingAction = action;
+      openEmailModal();
+      return null;
+    }
+    function finishPendingAction(email) {
+      if (!pendingAction) return;
+      const action = pendingAction;
+      pendingAction = null;
+      if (action.type === 'free') {
+        redirectToAiTools();
+      } else if (action.type === 'checkout') {
+        choosePlan(action.tier, action.provider, email);
+      }
+    }
+    function redirectToAiTools() {
+      window.location.href = 'ai-tools.html';
+    }
+    function startFreePlan() {
+      const email = requireEmail({ type: 'free' });
+      if (!email) return;
+      redirectToAiTools();
+    }
+    function openPaymentModal(tier) {
+      selectedPlan = tier;
+      const label = tier === 'max' ? 'Max Plan' : 'Pro Plan';
+      selectedPlanLabel.textContent = label;
+      paymentModal.classList.remove('hidden');
+    }
+    function closePaymentModal() {
+      selectedPlan = null;
+      paymentModal.classList.add('hidden');
+    }
+    function handlePaymentChoice(provider) {
+    if (!selectedPlan) return;
+    
+    closePaymentModal();
+    
+    if (provider === 'stripe') {
+        payStripe();
+    } else if (provider === 'mtn_momo') {
+        payMtn();
+    } else if (provider === 'airtel_money') {
+        payAirtel();
+    }
+}
+    function buildPriceKey(tier) {
+      return `${tier}_${cycle}_${currency}`;
+    }
+    async function choosePlan(tier, providerOverride, overrideEmail) {
+      const email = (overrideEmail || '').trim() || requireEmail({ type: 'checkout', tier, provider: providerOverride });
+      if (!email) return;
+      storeEmail(email);
+      const provider = providerOverride ? (providerOverride === 'stripe' ? 'stripe' : 'flutterwave') : (currency === 'UGX' ? 'flutterwave' : 'stripe');
+      const paymentChannel = providerOverride && providerOverride !== 'stripe' ? providerOverride : null;
+      const price_key = buildPriceKey(tier);
+      const payload = {
+        email,
+        provider,
+        price_key,
+        success_url: window.location.href.split('?')[0],
+        cancel_url: window.location.href.split('?')[0]
+      };
+      if (paymentChannel) payload.payment_channel = paymentChannel;
+      try {
+        const res = await fetch(`${BILLING_API_BASE}/checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.checkout_url) {
+          window.location.href = data.checkout_url;
+        } else {
+          pricingAlert.classList.remove('hidden');
+          pricingAlert.textContent = 'Could not start checkout.';
+        }
+      } catch (e) {
+        pricingAlert.classList.remove('hidden');
+        pricingAlert.textContent = 'Error starting checkout.';
+      }
+    }
+
+    emailForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const submittedEmail = emailInput.value.trim();
+      if (!submittedEmail) return;
+      storeEmail(submittedEmail);
+      closeEmailModal();
+      finishPendingAction(submittedEmail);
+    });
+    modalCloseBtn.addEventListener('click', closeEmailModal);
+    emailModal.addEventListener('click', (event) => {
+      if (event.target === emailModal) closeEmailModal();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !emailModal.classList.contains('hidden')) {
+        closeEmailModal();
+      }
+      if (event.key === 'Escape' && !paymentModal.classList.contains('hidden')) {
+        closePaymentModal();
+      }
+      if (event.key === 'Escape' && pricingMobileNav && !pricingMobileNav.classList.contains('hidden')) {
+        setPricingMobileNav(false);
+      }
+    });
+    paymentModal.addEventListener('click', (event) => {
+      if (event.target === paymentModal) closePaymentModal();
+    });
+    paymentModalCloseBtn.addEventListener('click', closePaymentModal);
+
+    // Handle mock success redirects for scaffold
+    (function handleMockCheckout() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mock_checkout') === '1') {
+        const price_key = params.get('price_key') || '';
+        const email = params.get('email') || '';
+        const provider = params.get('provider') || 'stripe';
+        fetch(`${BILLING_API_BASE}/mock/activate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ price_key, email, provider })
+        }).then(()=> {
+          document.getElementById('pricing-alert').classList.remove('hidden');
+          document.getElementById('pricing-alert').textContent = 'Subscription activated for demo. You can now use higher limits.';
+          history.replaceState({}, document.title, window.location.pathname);
+        }).catch(()=>{});
+      }
+    })();
+
+    // ====== UPDATED PAYMENT FUNCTIONS ======
+
+    let currentPaymentNetwork = null;
+    let currentPaymentPlan = 'pro';
+
+    // MTN Mobile Money
+    function payMtn() {
+        const email = getStoredEmail();
+        if (!email) {
+            alert('📧 Please enter your email first');
+            openEmailModal();
+            return;
+        }
+        
+        currentPaymentNetwork = 'mtn';
+        currentPaymentPlan = selectedPlan || 'pro';
+        openPhoneModal();
+    }
+
+    // Airtel Money
+    function payAirtel() {
+        const email = getStoredEmail();
+        if (!email) {
+            alert('📧 Please enter your email first');
+            openEmailModal();
+            return;
+        }
+        
+        currentPaymentNetwork = 'airtel';
+        currentPaymentPlan = selectedPlan || 'pro';
+        openPhoneModal();
+    }
+
+    // Stripe/Card Payments
+    async function payStripe() {
+        alert('💳 Card payments are coming soon!\n\nFor now, please use Mobile Money (MTN or Airtel).\n\nWe are working on card payment integration and will notify you when it\'s ready.');
+    }
+
+    // Get amount for plan
+    function getAmountForPlan(plan) {
+        const planPrices = {
+            pro: 35000,
+            max: 95000
+        };
+        return planPrices[plan] || 35000;
+    }
+
+    // Open Phone Modal
+    function openPhoneModal() {
+        const phoneModal = document.getElementById('phone-modal');
+        const title = document.getElementById('phone-modal-title');
+        const subtitle = document.getElementById('phone-modal-subtitle');
+        const mtnGuide = document.getElementById('mtn-guide');
+        const airtelGuide = document.getElementById('airtel-guide');
+        
+        // Set modal content based on network
+        if (currentPaymentNetwork === 'mtn') {
+            title.textContent = 'Pay with MTN Mobile Money';
+            subtitle.textContent = 'Enter your MTN phone number to receive payment request';
+            mtnGuide.classList.remove('hidden');
+            airtelGuide.classList.add('hidden');
+        } else if (currentPaymentNetwork === 'airtel') {
+            title.textContent = 'Pay with Airtel Money';
+            subtitle.textContent = 'Enter your Airtel phone number to receive payment request';
+            mtnGuide.classList.add('hidden');
+            airtelGuide.classList.remove('hidden');
+        }
+        
+        // Reset form
+        document.getElementById('phone-input').value = '';
+        document.getElementById('phone-error').classList.add('hidden');
+        document.getElementById('phone-input').classList.remove('valid', 'invalid');
+        updateDigitCount();
+        
+        // Show modal
+        phoneModal.classList.remove('hidden');
+        
+        // Focus input after a short delay
+        setTimeout(() => {
+            document.getElementById('phone-input').focus();
+        }, 100);
+    }
+
+    // Close Phone Modal
+    function closePhoneModal() {
+        document.getElementById('phone-modal').classList.add('hidden');
+        currentPaymentNetwork = null;
+        currentPaymentPlan = null;
+    }
+
+    // Update digit count
+    function updateDigitCount() {
+        const input = document.getElementById('phone-input');
+        const count = document.getElementById('digit-count');
+        const digits = input.value.replace(/\D/g, '').length;
+        count.textContent = `${digits}/9`;
+        
+        if (digits === 9) {
+            input.classList.add('valid');
+            input.classList.remove('invalid');
+        } else if (digits > 0) {
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+        } else {
+            input.classList.remove('valid', 'invalid');
+        }
+    }
+
+    // Fill example numbers
+    function fillExample(network) {
+        if (network === 'mtn') {
+            document.getElementById('phone-input').value = '787871244';
+        } else if (network === 'airtel') {
+            document.getElementById('phone-input').value = '759860651';
+        }
+        updateDigitCount();
+        validatePhoneInput();
+    }
+
+    // Validate phone input
+    function validatePhoneInput() {
+        const input = document.getElementById('phone-input');
+        const value = input.value.replace(/\D/g, '');
+        const errorDiv = document.getElementById('phone-error');
+        
+        if (value.length !== 9) {
+            errorDiv.textContent = 'Please enter exactly 9 digits (after 256)';
+            errorDiv.classList.remove('hidden');
+            return false;
+        }
+        
+        // Validate based on network
+        if (currentPaymentNetwork === 'mtn') {
+            const prefix = value.substring(0, 2);
+            if (!['78', '77', '76'].includes(prefix)) {
+                errorDiv.textContent = 'MTN numbers must start with 78, 77, or 76';
+                errorDiv.classList.remove('hidden');
+                return false;
+            }
+        } else if (currentPaymentNetwork === 'airtel') {
+            const prefix = value.substring(0, 2);
+            if (!['70', '75', '74'].includes(prefix)) {
+                errorDiv.textContent = 'Airtel numbers must start with 70, 75, or 74';
+                errorDiv.classList.remove('hidden');
+                return false;
+            }
+        }
+        
+        errorDiv.classList.add('hidden');
+        return true;
+    }
+
+    // Process payment
+    async function processMobilePayment() {
+        if (!currentPaymentNetwork || !currentPaymentPlan) return;
+        
+        // Validate input
+        if (!validatePhoneInput()) {
+            return;
+        }
+        
+        const input = document.getElementById('phone-input');
+        const phone = '256' + input.value.replace(/\D/g, '');
+        const email = getStoredEmail();
+        const amount = getAmountForPlan(currentPaymentPlan);
+        
+        // Show loading state
+        const submitBtn = document.getElementById('submit-phone-btn');
+        const originalText = submitBtn.innerHTML;
+        const originalBg = submitBtn.style.background;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+        submitBtn.disabled = true;
+        submitBtn.style.background = '#6b7280';
+        
+        try {
+            console.log(`Sending ${currentPaymentNetwork} payment request...`);
+            
+            // Add timeout to prevent hanging
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+            
+            // Send payment request with timeout
+            const response = await fetch('http://localhost:8000/api/payments/mobile-money/request', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    phone_number: phone,
+                    amount: amount,
+                    plan: currentPaymentPlan,
+                    email: email,
+                    network: currentPaymentNetwork
+                }),
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            // Check if response is OK
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Response:', data);
+            
+            if (data.status === 'pending') {
+                // Close modal immediately to show we're proceeding
+                closePhoneModal();
+                
+                // Show immediate feedback
+                showPaymentSuccess(phone, amount, data.transaction_id);
+                
+                // Start polling immediately for faster confirmation
+                startPaymentPolling(data.transaction_id, email, currentPaymentPlan);
+                
+            } else if (data.detail || data.message) {
+                throw new Error(data.detail || data.message);
+            } else {
+                throw new Error('Payment request failed without details');
+            }
+        } catch (error) {
+            console.error('Payment error:', error);
+            
+            // User-friendly error messages
+            let errorMessage = '❌ Error processing payment';
+            
+            if (error.name === 'AbortError') {
+                errorMessage = '⏱️ Request timed out. Please check your internet connection and try again.';
+            } else if (error.message.includes('Failed to fetch')) {
+            errorMessage = '🌐 Network error. Please check your internet connection and try again.';
+            } else if (error.message.includes('HTTP error')) {
+                errorMessage = '🔧 Server error. Please try again in a moment.';
+            } else {
+                errorMessage = `❌ ${error.message}`;
+            }
+            
+            // Show error in modal instead of closing it
+            showPaymentError(errorMessage);
+        } finally {
+            // Reset button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            submitBtn.style.background = originalBg;
+        }
+    }
+
+    // New function to poll for payment status
+    async function startPaymentPolling(transactionId, email, plan) {
+        let attempts = 0;
+        const maxAttempts = 20; // Try for 20 * 3 seconds = 60 seconds total
+        const pollInterval = 3000; // Check every 3 seconds
+        
+        const pollPayment = async () => {
+            attempts++;
+            
+            try {
+                console.log(`Polling attempt ${attempts} for transaction ${transactionId}`);
+                
+                const response = await fetch('http://localhost:8000/api/payments/mobile-money/complete', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        transaction_id: transactionId,
+                        email: email,
+                        plan: plan
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('Poll response:', data);
+                
+                if (data.status === 'success') {
+                    // Payment confirmed!
+                    showFinalSuccess(plan);
+                    return true;
+                } else if (data.status === 'pending' && attempts < maxAttempts) {
+                    // Still pending, poll again
+                    setTimeout(pollPayment, pollInterval);
+                    return false;
+                } else if (attempts >= maxAttempts) {
+                    // Max attempts reached
+                    showPaymentTimeout();
+                    return false;
+                }
+            } catch (error) {
+                console.error('Polling error:', error);
+                
+                if (attempts < maxAttempts) {
+                    setTimeout(pollPayment, pollInterval);
+                } else {
+                    showPaymentTimeout();
+                }
+            }
+        };
+        
+        // Start polling
+        setTimeout(pollPayment, pollInterval);
+    }
+
+    // Show payment error in modal
+    function showPaymentError(message) {
+        const errorDiv = document.getElementById('phone-error');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            errorDiv.classList.add('animate-pulse');
+            
+            // Scroll to error
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+                errorDiv.classList.remove('animate-pulse');
+            }, 5000);
+        }
+    }
+
+    // Show payment timeout message
+    function showPaymentTimeout() {
+        const message = `
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full animate-bounce-in">
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center">
+                            <i class="fas fa-clock text-3xl text-yellow-600 dark:text-yellow-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">⏳ Payment Still Processing</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Your payment request was sent but hasn't been confirmed yet.
+                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                            Please check your phone to approve the payment.<br>
+                            The system will continue checking in the background.
+                        </p>
+                        <div class="space-y-2">
+                            <button onclick="window.location.reload()" class="w-full py-3 bg-primary text-white rounded-lg font-medium">
+                                <i class="fas fa-sync-alt mr-2"></i>Check Again
+                            </button>
+                            <button onclick="document.querySelector('.fixed').remove(); window.location.href = 'ai-tools.html';" class="w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg font-medium">
+                                Go to AI Tools Anyway
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', message);
+    }
+
+    // Optimize the showPaymentSuccess function
+    function showPaymentSuccess(phone, amount, transactionId) {
+        const formattedAmount = amount.toLocaleString('en-UG');
+        const message = `
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full animate-bounce-in">
+                    <div class="text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center animate-pulse">
+                            <i class="fas fa-check text-2xl text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">📱 Payment Request Sent!</h3>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 mb-4">
+                            <div class="text-left space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Phone:</span>
+                                    <span class="font-semibold">${phone}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Amount:</span>
+                                    <span class="font-semibold">${formattedAmount} UGX</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Network:</span>
+                                    <span class="font-semibold">${currentPaymentNetwork.toUpperCase()}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                            <p class="text-sm text-blue-700 dark:text-blue-300">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Check your phone and approve the payment. Confirming...
+                            </p>
+                        </div>
+                        
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
+                            <div id="progress-bar" class="bg-green-600 h-2 rounded-full w-0 animate-progress"></div>
+                        </div>
+                        
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-4 font-mono">
+                            ID: ${transactionId}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', message);
+        
+        // Add CSS for progress animation
+        const progressStyle = document.createElement('style');
+        progressStyle.textContent = `
+            @keyframes progress {
+                0% { width: 0%; }
+                50% { width: 70%; }
+                100% { width: 100%; }
+            }
+            .animate-progress {
+                animation: progress 30s linear forwards;
+            }
+        `;
+        document.head.appendChild(progressStyle);
+    }
+
+    // Update the showFinalSuccess function
+    function showFinalSuccess(plan) {
+        // Remove any existing success/error modals
+        document.querySelectorAll('.fixed').forEach(el => el.remove());
+        
+        const message = `
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full animate-bounce-in">
+                    <div class="text-center">
+                        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center animate-pulse">
+                            <i class="fas fa-gem text-4xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">🎉 Payment Successful!</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Your <strong class="text-green-600 dark:text-green-400">${plan.toUpperCase()} Plan</strong> is now active!
+                        </p>
+                        <div class="mb-6">
+                            <div class="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-4 py-2 rounded-full">
+                                <i class="fas fa-bolt"></i>
+                                <span>Full access unlocked!</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <button onclick="window.location.href = 'ai-tools.html'" class="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+                                <i class="fas fa-rocket mr-2"></i>Launch AI Tools
+                            </button>
+                            <button onclick="document.querySelector('.fixed').remove()" class="w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                Stay Here
+                            </button>
+                        </div>
+                        
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-4">
+                            Redirecting automatically in <span id="countdown">5</span> seconds...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', message);
+        
+        // Auto-redirect countdown
+        let countdown = 5;
+        const countdownEl = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdownEl) countdownEl.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                window.location.href = 'ai-tools.html';
+            }
+        }, 1000);
+    }
+
+    // ====== EVENT LISTENERS ======
+
+    // Add event listeners for phone modal
+    document.addEventListener('DOMContentLoaded', function() {
+        // Phone input validation
+        const phoneInput = document.getElementById('phone-input');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function() {
+                // Allow only digits
+                this.value = this.value.replace(/\D/g, '');
+                // Limit to 9 digits
+                if (this.value.length > 9) {
+                    this.value = this.value.substring(0, 9);
+                }
+                updateDigitCount();
+                validatePhoneInput();
+            });
+            
+            phoneInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    processMobilePayment();
+                }
+            });
+        }
+        
+        // Submit button
+        const submitPhoneBtn = document.getElementById('submit-phone-btn');
+        if (submitPhoneBtn) {
+            submitPhoneBtn.addEventListener('click', processMobilePayment);
+        }
+        
+        // Cancel button
+        const cancelPhoneBtn = document.getElementById('cancel-phone-btn');
+        if (cancelPhoneBtn) {
+            cancelPhoneBtn.addEventListener('click', closePhoneModal);
+        }
+        
+        // Close phone modal button
+        const closePhoneModalBtn = document.getElementById('close-phone-modal');
+        if (closePhoneModalBtn) {
+            closePhoneModalBtn.addEventListener('click', closePhoneModal);
+        }
+        
+        // Close modal on backdrop click
+        const phoneModal = document.getElementById('phone-modal');
+        if (phoneModal) {
+            phoneModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePhoneModal();
+                }
+            });
+        }
+        
+        // Escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && phoneModal && !phoneModal.classList.contains('hidden')) {
+                closePhoneModal();
+            }
+        });
+    });
+
+    // Helper function to complete payment
+    async function completePayment(transactionId, email, plan) {
+        try {
+            console.log('Completing payment...');
+            
+            const response = await fetch('http://localhost:8000/api/payments/mobile-money/complete', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    transaction_id: transactionId,
+                    email: email,
+                    plan: plan
+                })
+            });
+            
+            const data = await response.json();
+            console.log('Completion response:', data);
+            
+            if (data.status === 'success') {
+                alert(`🎉 Payment Successful!\n\n${data.message}\n\nYour ${plan.toUpperCase()} plan is now active!`);
+                window.location.href = 'ai-tools.html';
+            } else {
+                alert('⏳ Payment not confirmed yet. Please check your phone and try again.');
+            }
+        } catch (error) {
+            console.error('Completion error:', error);
+            alert('❌ Error completing payment: ' + error.message);
+        }
+    }
+  </script>
+<!-- Phone Number Input Modal -->
+<div id="phone-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="phone-modal-title">
+  <div class="modal-panel relative" style="max-width: 500px;">
+    <button id="close-phone-modal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600" aria-label="Close phone input">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="space-y-6">
+      <div class="text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+          <i class="fas fa-mobile-alt text-2xl text-primary"></i>
+        </div>
+        <h3 id="phone-modal-title" class="text-2xl font-bold">Complete Payment</h3>
+        <p id="phone-modal-subtitle" class="text-gray-600 dark:text-gray-300 mt-2"></p>
+      </div>
+
+      <!-- Phone Input Card -->
+      <div class="phone-input-card bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+        <div class="mb-6">
+          <h4 class="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">📱 Enter Your Phone Number</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Please enter your phone number starting with <strong>256</strong> followed by <strong>9 digits</strong>:</p>
+        </div>
+
+        <div class="network-guide space-y-4 mb-6">
+          <!-- MTN Section (shown for MTN) -->
+          <div id="mtn-guide" class="network-section hidden">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-signal text-yellow-600 dark:text-yellow-400"></i>
+              </div>
+              <div>
+                <h5 class="font-medium text-gray-800 dark:text-gray-100 mb-1">📶 MTN Numbers</h5>
+                <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• Start with: <strong>25678</strong>, <strong>25677</strong>, or <strong>25676</strong></li>
+                  <li>• Example: <code class="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">256787871244</code></li>
+                  <li>• Convert: <span class="text-xs text-gray-500">0787871244 → <strong>256787871244</strong></span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Airtel Section (shown for Airtel) -->
+          <div id="airtel-guide" class="network-section hidden">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-broadcast-tower text-red-600 dark:text-red-400"></i>
+              </div>
+              <div>
+                <h5 class="font-medium text-gray-800 dark:text-gray-100 mb-1">📡 Airtel Numbers</h5>
+                <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• Start with: <strong>25670</strong>, <strong>25675</strong>, or <strong>25674</strong></li>
+                  <li>• Example: <code class="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">256759860651</code></li>
+                  <li>• Convert: <span class="text-xs text-gray-500">0759860651 → <strong>256759860651</strong></span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Phone Number (12 digits):
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500">256</span>
+            </div>
+            <input 
+              id="phone-input" 
+              type="tel" 
+              class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+              placeholder="7XXXXXXXX"
+              maxlength="9"
+            >
+          </div>
+          <div class="mt-2 flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">
+              Enter 9 digits after 256
+            </span>
+            <span id="digit-count" class="text-xs font-medium text-gray-700 dark:text-gray-300">
+              0/9
+            </span>
+          </div>
+          <div id="phone-error" class="mt-2 text-sm text-red-600 dark:text-red-400 hidden"></div>
+
+          <div class="mt-6">
+            <div class="flex items-center justify-center mb-3">
+              <div class="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+              <span class="px-3 text-sm text-gray-500 dark:text-gray-400">Examples</span>
+              <div class="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="fillExample('mtn')" class="text-xs py-2 px-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-center">
+                0787871244<br>
+                <span class="font-semibold text-primary">→ 256787871244</span>
+              </button>
+              <button type="button" onclick="fillExample('airtel')" class="text-xs py-2 px-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-center">
+                0759860651<br>
+                <span class="font-semibold text-primary">→ 256759860651</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="cancel-phone-btn" class="flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+          Cancel
+        </button>
+        <button id="submit-phone-btn" class="flex-1 py-3 px-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
+          <i class="fas fa-paper-plane mr-2"></i>
+          Send Payment Request
+        </button>
+      </div>
+
+      <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+        <i class="fas fa-info-circle mr-1"></i>
+        You'll receive a payment request on your phone to complete the transaction
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
+

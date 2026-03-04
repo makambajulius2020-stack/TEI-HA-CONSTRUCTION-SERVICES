@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope:wght@400;500;700;800" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>AI Tools - TEI-HA Construction</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<script>
+	tailwind.config = {
+		darkMode: "class",
+		theme: {
+			extend: {
+				colors: {
+					primary: "#1173d4",
+					"background-light": "#f6f7f8",
+					"background-dark": "#101922",
+					"content-light": "#1f2937",
+					"content-dark": "#e5e7eb",
+					"subtle-light": "#6b7280",
+					"subtle-dark": "#9ca3af",
+					"border-light": "#e5e7eb",
+					"border-dark": "#374151",
+				},
+				fontFamily: {
+					display: ["Manrope", "sans-serif"],
+				},
+				animation: {
+					'fade-in': 'fadeIn 0.6s ease-out',
+					'slide-up': 'slideUp 0.6s ease-out',
+					'slide-down': 'slideDown 0.6s ease-out',
+					'scale-up': 'scaleUp 0.4s ease-out',
+					'rotate-slow': 'rotate 20s linear infinite',
+					'float': 'float 6s ease-in-out infinite',
+					'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+					'bounce-in': 'bounceIn 0.8s ease-out',
+					'shake': 'shake 0.5s ease-in-out',
+				},
+				borderRadius: {
+					DEFAULT: "0.25rem",
+					lg: "0.5rem",
+					xl: "0.75rem",
+					full: "9999px",
+				},
+			},
+		},
+	};
+</script>
+
+<style>
+	/* Reuse key styles from index */
+	.container { max-width: 1200px; }
+	.btn-primary {
+		@apply inline-flex items-center gap-2 px-5 py-3 bg-primary text-white rounded-xl shadow hover:bg-blue-600 transition;
+	}
+	.hover-card .card-bg {
+		background-size: cover;
+		background-position: center;
+	}
+	.social-icon {
+		@apply w-12 h-12 rounded-xl flex items-center justify-center text-white shadow transition;
+	}
+	/* Match main site heading font */
+	h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
+	.nav-link {
+		@apply text-sm font-medium text-white/90 hover:text-white transition-all duration-300 hover:scale-105 hover:font-semibold relative;
+	}
+	.nav-link::after {
+		content: '';
+		position: absolute;
+		width: 0;
+		height: 2px;
+		bottom: -5px;
+		left: 50%;
+		background-color: #FFD700;
+		transition: all 0.3s ease-in-out;
+	}
+	.nav-link:hover::after {
+		width: 100%;
+		left: 0%;
+	}
+	.mobile-nav-panel {
+		position: fixed;
+		top: 64px;
+		left: 0;
+		right: 0;
+		background: #ffffff;
+		border-bottom: 1px solid rgba(59,130,246,0.25);
+		box-shadow: 0 12px 30px rgba(15,23,42,0.15);
+		z-index: 60;
+	}
+	body.dark .mobile-nav-panel {
+		background: #111827;
+		border-color: rgba(59,130,246,0.35);
+	}
+</style>
+</head>
+<body class="bg-background-light text-content-light dark:bg-background-dark dark:text-content-dark">
+	<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+
+		<!-- Enhanced Header (copied from index) -->
+		<header class="top-0 z-50 w-full bg-blue-600/95 backdrop-blur-md border-b border-blue-500/20 fixed transition-all duration-300" id="header">
+			<div class="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-[4px] sm:py-[8px] lg:py-[12px]">
+
+				<!-- Logo and Company Name -->
+				<a href="index.html#home" class="flex items-center gap-3 group">
+					<div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300 overflow-hidden">
+						<img src="images/logo.png" alt="TEI-HA Logo" class="w-full h-full object-cover">
+					</div>
+					<div>
+						<h2 class="sm:block text-lg font-bold text-white tracking-tight transition-all duration-300 group-hover:tracking-wider">
+							TEI-HA Construction Services Ltd
+						</h2>
+						<p class="text-xs text-yellow-300 font-medium">Quality is our priority</p>
+					</div>
+				</a>
+
+				<!-- Navigation -->
+				<nav class="hidden lg:flex items-center gap-6">
+					<a class="nav-link" href="index.html#home">Home</a>
+					<a class="nav-link" href="index.html#services">Services</a>
+					<a class="nav-link" href="index.html#portfolio">Portfolio</a>
+					<a class="nav-link" href="index.html#about">About Us</a>
+					<a class="nav-link" href="index.html#contact">Contact</a>
+					<a href="pricing.html" class="ml-4 btn-primary">
+						Pricing
+					</a>
+				</nav>
+
+				<!-- Right Controls -->
+				<div class="flex items-center gap-2">
+					<a href="index.html" class="p-2 rounded-md text-white hover:bg-white/20 transition-all duration-300 transform hover:scale-110" aria-label="Back to Home">
+						<i class="fas fa-home"></i>
+					</a>
+					<button onclick="openProfile()" class="p-2 rounded-md text-white hover:bg-white/20 transition-all duration-300 transform hover:scale-110" aria-label="Open profile">
+						<i class="fas fa-user"></i>
+					</button>
+					<button id="ai-mobile-nav-toggle" class="lg:hidden p-2 rounded-md text-white hover:bg-white/20 transition-all duration-300 focus:outline-none" aria-label="Open navigation menu" aria-expanded="false">
+						<i id="ai-mobile-nav-icon" class="fas fa-bars text-xl"></i>
+					</button>
+				</div>
+			</div>
+		</header>
+
+		<nav id="ai-mobile-nav" class="mobile-nav-panel lg:hidden hidden">
+			<div class="flex flex-col px-4 py-4 space-y-3 text-base font-semibold">
+				<a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#home"><i class="fas fa-home text-primary"></i> Home</a>
+				<a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#services"><i class="fas fa-toolbox text-primary"></i> Services</a>
+				<a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#portfolio"><i class="fas fa-th-large text-primary"></i> Portfolio</a>
+				<a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#about"><i class="fas fa-users text-primary"></i> About Us</a>
+				<a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="index.html#contact"><i class="fas fa-envelope text-primary"></i> Contact</a>
+				<a class="text-gray-800 dark:text-gray-100 flex items-center gap-2" href="pricing.html"><i class="fas fa-tags text-primary"></i> Pricing</a>
+				<a class="btn-primary justify-center" href="ai-tools.html">AI Tools</a>
+			</div>
+		</nav>
+
+		<!-- Main -->
+		<main class="flex-grow">
+			<section class="pt-28 sm:pt-32 pb-10 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
+				<div class="container mx-auto px-4">
+					<div class="text-center max-w-2xl mx-auto">
+						<h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+							<span id="typewriter-ai-tools" class="bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent"></span>
+						</h1>
+						<p class="text-subtle-light dark:text-subtle-dark">
+							Explore our suite of AI-powered tools to accelerate your project.
+						</p>
+					</div>
+					<div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+						<div class="hover-card group relative rounded-xl border border-border-light dark:border-border-dark overflow-hidden bg-white dark:bg-gray-900 shadow">
+							<div class="p-6">
+								<div class="text-3xl mb-4 text-primary"><i class="fas fa-sack-dollar"></i></div>
+								<h3 class="text-lg font-bold mb-2">Budget Sensei</h3>
+								<p class="text-sm text-subtle-light dark:text-subtle-dark mb-4">Estimate costs quickly based on project details.</p>
+								<button class="btn-primary" onclick="openToolModal('budget')">
+									Open Tool
+								</button>
+							</div>
+						</div>
+						<div class="hover-card group relative rounded-xl border border-border-light dark:border-border-dark overflow-hidden bg-white dark:bg-gray-900 shadow">
+							<div class="p-6">
+								<div class="text-3xl mb-4 text-primary"><i class="fas fa-pen-ruler"></i></div>
+								<h3 class="text-lg font-bold mb-2">Inspiration Sketch Pad</h3>
+								<p class="text-sm text-subtle-light dark:text-subtle-dark mb-4">Turn prompts and references into concept sketches.</p>
+								<button class="btn-primary" onclick="openToolModal('sketch')">
+									Open Tool
+								</button>
+							</div>
+						</div>
+						<div class="hover-card group relative rounded-xl border border-border-light dark:border-border-dark overflow-hidden bg-white dark:bg-gray-900 shadow">
+							<div class="p-6">
+								<div class="text-3xl mb-4 text-primary"><i class="fas fa-palette"></i></div>
+								<h3 class="text-lg font-bold mb-2">Style Fusion</h3>
+								<p class="text-sm text-subtle-light dark:text-subtle-dark mb-4">Blend styles and get curated material suggestions.</p>
+								<button class="btn-primary" onclick="openToolModal('style-fusion')">
+									Open Tool
+								</button>
+							</div>
+						</div>
+						<div class="hover-card group relative rounded-xl border border-border-light dark:border-border-dark overflow-hidden bg-white dark:bg-gray-900 shadow">
+							<div class="p-6">
+								<div class="text-3xl mb-4 text-primary"><i class="fas fa-map-location-dot"></i></div>
+								<h3 class="text-lg font-bold mb-2">Virtual Site Scout</h3>
+								<p class="text-sm text-subtle-light dark:text-subtle-dark mb-4">Assess sites virtually and get feasibility insights.</p>
+								<button class="btn-primary" onclick="openToolModal('site-scout')">
+									Open Tool
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- AI Tools Modal -->
+			<div id="tool-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+				<div class="relative max-w-2xl w-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transform transition-transform duration-300 scale-95" id="tool-modal-content">
+					<button id="tool-modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Close">
+						<i class="fas fa-times text-lg"></i>
+					</button>
+					<div id="tool-modal-body" class="p-6">
+						<!-- Injected dynamically -->
+					</div>
+				</div>
+			</div>
+
+			<!-- Auth Modal -->
+			<div id="auth-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[120] hidden items-center justify-center p-4">
+				<div class="relative max-w-md w-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transform transition-transform duration-300 scale-95" id="auth-modal-content">
+					<button id="auth-modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Close">
+						<i class="fas fa-times text-lg"></i>
+					</button>
+					<div class="p-6">
+						<h3 class="text-2xl font-bold mb-4">Access AI Tools</h3>
+						<div class="flex items-center gap-2 mb-6 border-b border-border-light dark:border-border-dark">
+							<button id="auth-tab-login" class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent hover:text-primary">Sign In</button>
+							<button id="auth-tab-register" class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent hover:text-primary">Create Account</button>
+						</div>
+						<div id="auth-views">
+							<form id="login-form" class="space-y-3">
+								<div>
+									<label class="text-sm font-medium">Email</label>
+								    <input id="login-email" type="email" required autocomplete="email" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+								</div>
+								<div>
+									<label class="text-sm font-medium">Password</label>
+									<input id="login-password" type="password" required autocomplete="current-password" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+								</div>
+								<div class="flex items-center justify-between">
+									<label class="inline-flex items-center gap-2 text-sm select-none">
+										<input id="login-remember" type="checkbox" class="h-4 w-4 rounded border-border-light dark:border-border-dark" checked />
+										<span>Remember me</span>
+									</label>
+									<a href="#" class="text-sm text-primary hover:underline">Forgot password?</a>
+								</div>
+								<button type="submit" class="btn-primary w-full">Sign In</button>
+								<div id="login-success" class="text-sm text-green-600 mt-2"></div>
+								<div class="flex items-center gap-3 my-4">
+									<div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+									<span class="text-xs text-subtle-light dark:text-subtle-dark">or continue with</span>
+									<div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+								</div>
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<button type="button" onclick="socialSignIn('Google')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 border border-border-light dark:border-border-dark rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+										<i class="fab fa-google text-red-500"></i>
+										<span class="text-sm font-medium">Google</span>
+									</button>
+									<button type="button" onclick="socialSignIn('Outlook')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 border border-border-light dark:border-border-dark rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+										<i class="fab fa-microsoft text-blue-600"></i>
+										<span class="text-sm font-medium">Outlook</span>
+									</button>
+								</div>
+								<div id="login-error" class="text-sm text-red-600 mt-2"></div>
+							</form>
+							<form id="register-form" class="space-y-3 hidden">
+								<div>
+									<label class="text-sm font-medium">Full Name</label>
+								    <input id="register-name" type="text" required autocomplete="name" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+								</div>
+								<div>
+									<label class="text-sm font-medium">Email</label>
+								    <input id="register-email" type="email" required autocomplete="email" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+								</div>
+								<div>
+									<label class="text-sm font-medium">Phone</label>
+								    <input id="register-phone" type="tel" autocomplete="tel" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+								</div>
+								<div>
+									<label class="text-sm font-medium">Password</label>
+									<input id="register-password" type="password" required autocomplete="new-password" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+								</div>
+								<button type="submit" class="btn-primary w-full">Create Account</button>
+								<div id="register-error" class="text-sm text-red-600 mt-2"></div>
+								<div id="register-success" class="text-sm text-green-600 mt-2"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Profile Modal -->
+			<div id="profile-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[130] hidden items-center justify-center p-4">
+				<div class="relative max-w-md w-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transform transition-transform duration-300 scale-95" id="profile-modal-content">
+					<button id="profile-modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Close">
+						<i class="fas fa-times text-lg"></i>
+					</button>
+					<div class="p-6">
+						<div class="flex items-center gap-3 mb-4">
+							<div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center text-lg font-bold" id="profile-initials">U</div>
+							<div>
+								<h3 class="text-xl font-bold" id="profile-name">Your Profile</h3>
+								<p class="text-sm text-subtle-light dark:text-subtle-dark" id="profile-email"></p>
+							</div>
+						</div>
+						<div class="grid grid-cols-1 gap-3 text-sm">
+							<div class="rounded-lg border border-border-light dark:border-border-dark p-3">
+								<div class="flex items-center justify-between">
+									<span class="text-subtle-light dark:text-subtle-dark">Plan</span>
+									<span id="profile-plan" class="font-semibold">Free</span>
+								</div>
+								<div class="flex items-center justify-between mt-1">
+									<span class="text-subtle-light dark:text-subtle-dark">Cycle</span>
+									<span id="profile-cycle">Monthly</span>
+								</div>
+							</div>
+							<div class="rounded-lg border border-border-light dark:border-border-dark p-3">
+								<div class="flex items-center justify-between">
+									<span class="text-subtle-light dark:text-subtle-dark">Prompts</span>
+									<span><span id="profile-prompts">0</span>/<span id="profile-prompts-limit">5</span></span>
+								</div>
+								<div class="flex items-center justify-between mt-1">
+									<span class="text-subtle-light dark:text-subtle-dark">Characters</span>
+									<span><span id="profile-chars">0</span>/<span id="profile-chars-limit">5000</span></span>
+								</div>
+								<div class="text-xs text-subtle-light dark:text-subtle-dark mt-1">
+									Resets: <span id="profile-reset-at"></span>
+								</div>
+							</div>
+						</div>
+						<div class="mt-4 flex gap-2">
+							<a href="pricing.html" class="btn-primary flex-1 justify-center">Manage Plan</a>
+							<button onclick="signOut()" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 border border-red-500 text-red-600 rounded-xl hover:bg-red-50 transition">Sign Out</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Chatbot Panel -->
+			<div id="chatbot-panel" class="hidden fixed bottom-6 right-6 z-50 w-[380px] max-w-[92vw] rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-gray-900 shadow-2xl">
+				<div class="flex items-center justify-between px-4 py-3 border-b border-border-light dark:border-border-dark">
+					<div class="flex items-center gap-2">
+						<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+							<i class="fas fa-robot text-sm"></i>
+						</div>
+						<div>
+							<h4 class="text-sm font-semibold">TEI-HA Assistant</h4>
+							<p class="text-xs text-muted-light dark:text-muted-dark">Ask anything about our services</p>
+						</div>
+					</div>
+					<button onclick="toggleChatbot()" class="text-muted-light dark:text-muted-dark hover:text-gray-800 dark:hover:text-white transition">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+				<div id="chatbot-messages" class="h-80 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+					<div class="flex gap-3 items-start">
+						<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">
+							<i class="fas fa-robot text-sm"></i>
+						</div>
+						<div class="max-w-[75%] rounded-2xl rounded-tl-none bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm shadow">
+							Hi! I’m the TEI-HA assistant. How can I help you today?
+						</div>
+					</div>
+				</div>
+				<div class="px-3 pb-2">
+					<div id="chatbot-quick-replies" class="flex flex-wrap gap-2">
+						<button class="text-xs px-3 py-1 rounded-full border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800"
+							onclick="sendQuick('What services do you offer?')">Services</button>
+						<button class="text-xs px-3 py-1 rounded-full border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800"
+							onclick="sendQuick('Where are you located?')">Location</button>
+						<button class="text-xs px-3 py-1 rounded-full border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800"
+							onclick="sendQuick('How can I contact you?')">Contact</button>
+						<button class="text-xs px-3 py-1 rounded-full border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800"
+							onclick="sendQuick('What are your AI tools?')">AI Tools</button>
+						<button class="text-xs px-3 py-1 rounded-full border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800"
+							onclick="sendQuick('What are your plans and pricing?')">Pricing</button>
+					</div>
+				</div>
+				<div class="p-3 border-t border-border-light dark:border-border-dark">
+					<form id="chatbot-form" class="flex items-center gap-2" onsubmit="return submitChatbotForm(event)">
+						<input id="chatbot-input" type="text" placeholder="Type your message..." class="flex-1 h-11 px-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary text-sm" />
+						<button type="submit" class="h-11 px-4 rounded-xl bg-primary text-white hover:bg-blue-600 transition shadow">
+							<i class="fas fa-paper-plane"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+		</main>
+
+		<!-- Enhanced Floating Action Buttons -->
+		<div class="fixed right-6 bottom-6 z-50 flex flex-col space-y-4">
+			<!-- WhatsApp Button -->
+			<button onclick="openWhatsApp()" class="group relative">
+				<div class="social-icon bg-green-500 hover:bg-green-600 animate-pulse-glow">
+					<i class="fab fa-whatsapp text-2xl"></i>
+				</div>
+				<span class="absolute right-16 top-1/2 -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
+					Chat on WhatsApp
+				</span>
+			</button>
+			
+			<!-- AI Chatbot Button -->
+			<button onclick="toggleChatbot()" class="group relative">
+				<div class="social-icon bg-primary hover:bg-blue-600 animate-pulse-glow">
+					<i class="fas fa-robot text-2xl"></i>
+				</div>
+				<span class="absolute right-16 top-1/2 -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
+					AI Assistant
+				</span>
+			</button>
+			
+		</div>
+
+		<!-- Full-width Footer (copied from index) -->
+		<footer class="w-full bg-gray-900 text-white py-6 md:py-8">
+			<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10 mb-6 md:mb-10">
+					<!-- Company Info -->
+					<div class="col-span-1 md:col-span-2">
+						<div class="flex items-center gap-4 mb-4">
+							<div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center overflow-hidden">
+								<img src="images/logo.png" alt="TEI-HA Logo" class="w-full h-full object-cover">
+							</div>
+							<div>
+								<h3 class="text-2xl font-bold">TEI-HA Construction Services Ltd</h3>
+								<p class="text-yellow-400 text-sm font-medium">Quality is our priority</p>
+							</div>
+						</div>
+						<p class="text-gray-400 mb-4 max-w-md">Building the future with AI-powered precision and human expertise. Creating extraordinary architectural solutions across Uganda and beyond.</p>
+						
+						<!-- Connect With Us -->
+						<h2 class="text-3xl font-bold tracking-tight mb-4">Follow Us</h2>
+						<div class="flex flex-wrap gap-4 md:gap-6">
+							<a href="https://www.youtube.com/@Tei-haConstructionServices" target="_blank" class="social-icon bg-red-600 hover:bg-red-700">
+								<i class="fab fa-youtube text-2xl"></i>
+							</a>
+							<a href="#" class="social-icon bg-blue-800 hover:bg-blue-900">
+								<i class="fab fa-facebook text-2xl"></i>
+							</a>
+							<a href="#" class="social-icon bg-pink-600 hover:bg-pink-700">
+								<i class="fab fa-instagram text-2xl"></i>
+							</a>
+						</div>
+					</div>
+					
+					<!-- Quick Links -->
+					<div>
+						<h4 class="text-lg font-semibold mb-4 md:mb-6 text-yellow-400">Quick Links</h4>
+						<ul class="space-y-2 md:space-y-3">
+							<li><a href="index.html#home" class="footer-link">Home</a></li>
+							<li><a href="index.html#services" class="footer-link">Services</a></li>
+							<li><a href="index.html#portfolio" class="footer-link">Portfolio</a></li>
+							<li><a href="index.html#about" class="footer-link">About Us</a></li>
+							<li><a href="index.html#contact" class="footer-link">Contact</a></li>
+						</ul>
+					</div>
+					
+					<!-- Services -->
+					<div>
+						<h4 class="text-lg font-semibold mb-4 md:mb-6 text-yellow-400">Our Services</h4>
+						<ul class="space-y-2 md:space-y-3 text-gray-400">
+							<li class="footer-link">AI-Powered Design</li>
+							<li class="footer-link">Architecture Design</li>
+							<li class="footer-link">Interior Design</li>
+							<li class="footer-link">Project Management</li>
+							<li class="footer-link">Construction Services</li>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="border-t border-gray-700 pt-4 md:pt-6 text-center">
+					<p class="text-gray-400 mb-2">© 2025 TEI-HA Construction Services Ltd. All rights reserved.</p>
+					<p class="text-gray-500 text-sm">Transforming visions into reality with AI-powered architecture excellence.</p>
+				</div>
+			</div>
+		</footer>
+	</div>
+
+	<script>
+		// Server health check
+		async function checkServerHealth() {
+			try {
+				const response = await fetch('http://localhost:8000/health', { 
+					method: 'GET',
+					mode: 'cors',
+					cache: 'no-cache'
+				});
+				return response.ok;
+			} catch (error) {
+				return false;
+			}
+		}
+
+		// Check server on page load
+		document.addEventListener('DOMContentLoaded', async function() {
+			// Handle OAuth callback first
+			const urlParams = new URLSearchParams(window.location.search);
+			const oauthProvider = urlParams.get('oauth');
+			const code = urlParams.get('code');
+			
+			if (oauthProvider && code) {
+				await handleOAuthCallback(oauthProvider, code);
+				return; // Don't run other initialization if handling OAuth
+			}
+			
+			// Typewriter effect
+			const el = document.getElementById('typewriter-ai-tools');
+			if (el) {
+				const text = 'AI Tools';
+				el.textContent = '';
+				let i = 0;
+				const intervalId = setInterval(() => {
+					el.textContent += text.charAt(i);
+					i += 1;
+					if (i >= text.length) clearInterval(intervalId);
+				}, 120);
+			}
+
+			// Check if backend server is running
+			const isServerRunning = await checkServerHealth();
+			if (!isServerRunning) {
+				console.warn('Backend server is not running. Please start it using start-backend.bat or start-backend.sh');
+			}
+		});
+
+		// Contact functions with proper WhatsApp number
+		function openWhatsApp() {
+			const message = encodeURIComponent("Hello! I'm interested in your construction services. Could you please provide more information?");
+			window.open(`https://wa.me/256741190078?text=${message}`, '_blank');
+		}
+
+		// AI Tools modal and handlers (copied from index)
+		const TOOL_API_BASE = 'http://localhost:8000/api/tools';
+		const USER_API_BASE = 'http://localhost:8000/api/users';
+		const AUTH_API_BASE = 'http://localhost:8000/api/auth';
+		let _pendingTool = null;
+		const aiMobileToggle = document.getElementById('ai-mobile-nav-toggle');
+		const aiMobileIcon = document.getElementById('ai-mobile-nav-icon');
+		const aiMobileNav = document.getElementById('ai-mobile-nav');
+		const aiMobileLinks = aiMobileNav ? aiMobileNav.querySelectorAll('a') : [];
+
+		function setAiMobileNav(open) {
+			if (!aiMobileNav || !aiMobileToggle || !aiMobileIcon) return;
+			aiMobileNav.classList.toggle('hidden', !open);
+			document.body.classList.toggle('overflow-hidden', open);
+			aiMobileToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+			aiMobileIcon.classList.toggle('fa-bars', !open);
+			aiMobileIcon.classList.toggle('fa-times', open);
+		}
+		function toggleAiMobileNav() {
+			if (!aiMobileNav) return;
+			setAiMobileNav(aiMobileNav.classList.contains('hidden'));
+		}
+		aiMobileToggle?.addEventListener('click', toggleAiMobileNav);
+		aiMobileLinks.forEach(link => link.addEventListener('click', () => setAiMobileNav(false)));
+		window.addEventListener('resize', () => {
+			if (window.innerWidth >= 1024) setAiMobileNav(false);
+		});
+
+		// Handle OAuth callback on page load
+		document.addEventListener('DOMContentLoaded', async function() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const oauthProvider = urlParams.get('oauth');
+			const code = urlParams.get('code');
+			
+			if (oauthProvider && code) {
+				await handleOAuthCallback(oauthProvider, code);
+			}
+		});
+
+		async function handleOAuthCallback(provider, code) {
+			try {
+				const providerLower = provider.toLowerCase();
+				const providerKey = providerLower === 'outlook' ? 'microsoft' : providerLower;
+				const response = await fetch(`${AUTH_API_BASE}/${providerKey}/callback?code=${encodeURIComponent(code)}`, {
+					method: 'GET'
+				});
+				
+				if (!response.ok) {
+					const error = await response.json();
+					throw new Error(error.detail || 'OAuth authentication failed');
+				}
+				
+				const data = await response.json();
+				if (data.status === 'ok' && data.email) {
+					// Store user info
+					localStorage.setItem('teiha_user_email', data.email);
+					if (data.name) {
+						localStorage.setItem('teiha_user_name', data.name);
+					}
+					
+					// Close auth modal if open
+					const authModal = document.getElementById('auth-modal');
+					if (authModal && !authModal.classList.contains('hidden')) {
+						const content = document.getElementById('auth-modal-content');
+						if (content) {
+							content.classList.remove('scale-100');
+							content.classList.add('scale-95');
+							setTimeout(() => {
+								authModal.classList.add('hidden');
+								authModal.classList.remove('flex');
+							}, 250);
+						}
+					}
+					
+					// Open pending tool if any
+					if (_pendingTool) {
+						const tool = _pendingTool;
+						_pendingTool = null;
+						openToolModal(tool);
+					}
+					
+					// Clean URL
+					window.history.replaceState({}, document.title, window.location.pathname);
+				}
+			} catch (error) {
+				console.error('OAuth callback error:', error);
+				alert('Authentication failed: ' + error.message);
+			}
+		}
+
+		async function socialSignIn(provider) {
+			try {
+				const providerLower = provider.toLowerCase();
+				const providerKey = providerLower === 'outlook' ? 'microsoft' : providerLower;
+				
+				const response = await fetch(`${AUTH_API_BASE}/${providerKey}/login`);
+				
+				if (!response.ok) {
+					const error = await response.json();
+					alert(error.detail || `${provider} sign-in is not configured. Please use email and password for now.`);
+					return;
+				}
+				
+				const data = await response.json();
+				if (data.auth_url) {
+					// Redirect to OAuth provider
+					window.location.href = data.auth_url;
+				}
+			} catch (error) {
+				console.error('OAuth error:', error);
+				alert(`${provider} sign-in is not configured. Please use email and password for now.`);
+			}
+		}
+
+		async function openToolModal(tool) {
+			const email = localStorage.getItem('teiha_user_email') || sessionStorage.getItem('teiha_user_email') || '';
+			if (!email) {
+				_pendingTool = tool;
+				return openAuthModal();
+			}
+			const modal = document.getElementById('tool-modal');
+			const modalContent = document.getElementById('tool-modal-content');
+			const body = document.getElementById('tool-modal-body');
+			if (!modal || !modalContent || !body) return;
+
+			body.innerHTML = renderToolForm(tool);
+
+			// Wire submit handlers
+			if (tool === 'budget') {
+				const form = document.getElementById('budget-form');
+				form && form.addEventListener('submit', submitBudgetForm);
+			} else if (tool === 'sketch') {
+				const form = document.getElementById('sketch-form');
+				form && form.addEventListener('submit', submitSketchForm);
+			} else if (tool === 'style-fusion') {
+				const form = document.getElementById('style-form');
+				form && form.addEventListener('submit', submitStyleForm);
+			} else if (tool === 'site-scout') {
+				const form = document.getElementById('scout-form');
+				form && form.addEventListener('submit', submitScoutForm);
+			}
+
+			// Show modal
+			modal.classList.remove('hidden');
+			modal.classList.add('flex');
+			requestAnimationFrame(() => {
+				modalContent.classList.remove('scale-95');
+				modalContent.classList.add('scale-100');
+			});
+
+			const closeBtn = document.getElementById('tool-modal-close');
+			const close = () => {
+				// Animate out
+				modalContent.classList.remove('scale-100');
+				modalContent.classList.add('scale-95');
+				const onEnd = (ev) => {
+					if (ev.target !== modalContent) return;
+					modalContent.removeEventListener('transitionend', onEnd);
+					modal.classList.add('hidden');
+					modal.classList.remove('flex');
+				};
+				modalContent.addEventListener('transitionend', onEnd);
+				// Fallback if transitionend doesn't fire
+				setTimeout(() => {
+					if (!modal.classList.contains('hidden')) {
+						modal.classList.add('hidden');
+						modal.classList.remove('flex');
+					}
+				}, 300);
+			};
+			closeBtn && closeBtn.addEventListener('click', close, { once: true });
+			modal.addEventListener('click', (e) => {
+				if (e.target === modal) close();
+			}, { once: true });
+			document.addEventListener('keydown', function escHandler(e) {
+				if (e.key === 'Escape') {
+					document.removeEventListener('keydown', escHandler);
+					close();
+				}
+			});
+		}
+
+		function openAuthModal() {
+			const modal = document.getElementById('auth-modal');
+			const content = document.getElementById('auth-modal-content');
+			if (!modal || !content) return;
+			modal.classList.remove('hidden');
+			modal.classList.add('flex');
+			requestAnimationFrame(() => {
+				content.classList.remove('scale-95');
+				content.classList.add('scale-100');
+			});
+			// Clear any prefilled/demo values when opening the auth modal
+			const fieldsToClear = ['login-email','login-password','register-name','register-email','register-phone','register-password'];
+			fieldsToClear.forEach((id) => {
+				const el = document.getElementById(id);
+				if (el && typeof el.value !== 'undefined') el.value = '';
+			});
+			const closeBtn = document.getElementById('auth-modal-close');
+			const close = () => {
+				content.classList.remove('scale-100');
+				content.classList.add('scale-95');
+				setTimeout(() => {
+					modal.classList.add('hidden');
+					modal.classList.remove('flex');
+				}, 250);
+			};
+			closeBtn && closeBtn.addEventListener('click', close, { once: true });
+			modal.addEventListener('click', (e) => {
+				if (e.target === modal) close();
+			}, { once: true });
+
+			// Tabs
+			const tabLogin = document.getElementById('auth-tab-login');
+			const tabRegister = document.getElementById('auth-tab-register');
+			const loginForm = document.getElementById('login-form');
+			const registerForm = document.getElementById('register-form');
+			// Clear messages
+			['login-error','register-error','login-success','register-success'].forEach(id => {
+				const el = document.getElementById(id);
+				if (el) el.textContent = '';
+			});
+			const activate = (view) => {
+				if (view === 'login') {
+					loginForm && loginForm.classList.remove('hidden');
+					registerForm && registerForm.classList.add('hidden');
+					tabLogin && tabLogin.classList.add('border-primary', 'text-primary');
+					tabRegister && tabRegister.classList.remove('border-primary', 'text-primary');
+				} else {
+					registerForm && registerForm.classList.remove('hidden');
+					loginForm && loginForm.classList.add('hidden');
+					tabRegister && tabRegister.classList.add('border-primary', 'text-primary');
+					tabLogin && tabLogin.classList.remove('border-primary', 'text-primary');
+				}
+			};
+			activate('login');
+			tabLogin && tabLogin.addEventListener('click', () => activate('login'));
+			tabRegister && tabRegister.addEventListener('click', () => activate('register'));
+
+			// Login submit
+			const loginError = document.getElementById('login-error');
+			const loginSuccess = document.getElementById('login-success');
+			loginForm && loginForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+				loginError.textContent = '';
+				if (loginSuccess) loginSuccess.textContent = '';
+				const email = (document.getElementById('login-email').value || '').trim();
+				const password = (document.getElementById('login-password').value || '').trim();
+				const remember = !!(document.getElementById('login-remember') && document.getElementById('login-remember').checked);
+				if (!email || !email.includes('@') || !password) {
+					loginError.textContent = 'Enter a valid email and password.';
+					return;
+				}
+				try {
+					// Persist based on Remember me
+					if (remember) {
+						localStorage.setItem('teiha_user_email', email);
+						localStorage.setItem('teiha_remember_me', 'true');
+						sessionStorage.removeItem('teiha_user_email');
+					} else {
+						sessionStorage.setItem('teiha_user_email', email);
+						localStorage.removeItem('teiha_user_email');
+						localStorage.removeItem('teiha_remember_me');
+					}
+				} catch (_) {}
+				if (loginSuccess) loginSuccess.textContent = 'Signed in successfully.';
+				setTimeout(() => {
+					close();
+					if (_pendingTool) {
+						const tool = _pendingTool;
+						_pendingTool = null;
+						openToolModal(tool);
+					}
+				}, 700);
+			}, { once: true });
+
+			// Register submit
+			const registerError = document.getElementById('register-error');
+			const registerSuccess = document.getElementById('register-success');
+			registerForm && registerForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				registerError.textContent = '';
+				if (registerSuccess) registerSuccess.textContent = '';
+				const name = (document.getElementById('register-name').value || '').trim();
+				const email = (document.getElementById('register-email').value || '').trim();
+				const phone = (document.getElementById('register-phone').value || '').trim();
+				const password = (document.getElementById('register-password').value || '').trim();
+				if (!name || !email || !email.includes('@') || !password) {
+					registerError.textContent = 'Please fill name, valid email, and password.';
+					return;
+				}
+				try {
+					const res = await fetch(`${USER_API_BASE}/register`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ email, name, phone })
+					});
+					
+					if (!res.ok) {
+						// Try to get error details from response
+						let errorMessage = 'Could not create account. Please try again.';
+						try {
+							const errorData = await res.json();
+							if (errorData.error || errorData.detail) {
+								errorMessage = errorData.error || errorData.detail || errorMessage;
+							}
+						} catch (parseErr) {
+							// If response is not JSON, use status-based message
+							if (res.status === 400) {
+								errorMessage = 'Invalid email address. Please check and try again.';
+							} else if (res.status === 409) {
+								errorMessage = 'An account with this email already exists. Please sign in instead.';
+							} else if (res.status >= 500) {
+								errorMessage = 'Server error. Please try again later.';
+							}
+						}
+						registerError.textContent = errorMessage;
+						return;
+					}
+					
+					// Success - parse response
+					const data = await res.json();
+					if (data.status === 'ok' || res.ok) {
+						// Store user info locally
+						try {
+							localStorage.setItem('teiha_user_email', email);
+							localStorage.setItem('teiha_user_name', name);
+							if (phone) localStorage.setItem('teiha_user_phone', phone);
+						} catch (storageErr) {
+							console.warn('Could not save to localStorage:', storageErr);
+						}
+						
+						// Do NOT sign the user in automatically; direct to Sign In
+						if (registerSuccess) registerSuccess.textContent = 'Account created successfully! Please sign in.';
+						activate('login');
+						const loginEmail = document.getElementById('login-email');
+						if (loginEmail) loginEmail.value = email;
+						// Focus password field for quicker signin
+						setTimeout(() => {
+							const pwd = document.getElementById('login-password');
+							if (pwd) pwd.focus();
+						}, 50);
+					}
+				} catch (err) {
+					// Network or other errors
+					console.error('Registration error:', err);
+					if (err.name === 'TypeError' && err.message.includes('fetch')) {
+						registerError.textContent = 'Cannot connect to server. Please check your connection and ensure the server is running.';
+					} else {
+						registerError.textContent = 'Could not create account. Please try again.';
+					}
+				}
+			}, { once: true });
+		}
+
+
+		function openProfile() {
+			const email = localStorage.getItem('teiha_user_email') || sessionStorage.getItem('teiha_user_email') || '';
+			if (!email) return openAuthModal();
+			const modal = document.getElementById('profile-modal');
+			const content = document.getElementById('profile-modal-content');
+			if (!modal || !content) return;
+			// populate static fields
+			const name = localStorage.getItem('teiha_user_name') || '';
+			const phone = localStorage.getItem('teiha_user_phone') || '';
+			document.getElementById('profile-email').textContent = email;
+			document.getElementById('profile-name').textContent = name || 'Your Profile';
+			// initials
+			const initials = (name || email).trim().split(/\s+/).map(s => s[0]?.toUpperCase() || '').slice(0,2).join('') || 'U';
+			document.getElementById('profile-initials').textContent = initials;
+			// fetch usage/subscription
+			fetch(`${USER_API_BASE.replace('/api/users','')}/billing/subscription?email=${encodeURIComponent(email)}`)
+				.then(r => r.json()).then(sub => {
+					const plan = (sub.tier || 'free');
+					document.getElementById('profile-plan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+					document.getElementById('profile-cycle').textContent = (sub.cycle || 'month');
+				}).catch(()=>{});
+			fetch(`${USER_API_BASE}/me?email=${encodeURIComponent(email)}`)
+				.then(r => r.json()).then(data => {
+					if (data && data.usage) {
+						document.getElementById('profile-prompts').textContent = data.usage.prompts_used ?? 0;
+						document.getElementById('profile-chars').textContent = data.usage.chars_used ?? 0;
+						document.getElementById('profile-reset-at').textContent = data.usage.reset_at ? new Date(data.usage.reset_at).toLocaleString() : '';
+					}
+					if (data && data.limits) {
+						document.getElementById('profile-prompts-limit').textContent = data.limits.prompt_limit ?? 0;
+						document.getElementById('profile-chars-limit').textContent = data.limits.char_limit ?? 0;
+					}
+					if (data && data.subscription) {
+						const plan = (data.subscription.tier || 'free');
+						document.getElementById('profile-plan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+						document.getElementById('profile-cycle').textContent = (data.subscription.cycle || 'month');
+					}
+				}).catch(()=>{});
+			modal.classList.remove('hidden');
+			modal.classList.add('flex');
+			requestAnimationFrame(() => {
+				content.classList.remove('scale-95');
+				content.classList.add('scale-100');
+			});
+			const closeBtn = document.getElementById('profile-modal-close');
+			const close = () => {
+				content.classList.remove('scale-100');
+				content.classList.add('scale-95');
+				setTimeout(() => {
+					modal.classList.add('hidden');
+					modal.classList.remove('flex');
+				}, 200);
+			};
+			closeBtn && closeBtn.addEventListener('click', close, { once: true });
+			modal.addEventListener('click', (e) => {
+				if (e.target === modal) close();
+			}, { once: true });
+		}
+
+		function signOut() {
+			try {
+				localStorage.removeItem('teiha_user_email');
+				localStorage.removeItem('teiha_user_name');
+				localStorage.removeItem('teiha_user_phone');
+				localStorage.removeItem('teiha_remember_me');
+				sessionStorage.removeItem('teiha_user_email');
+			} catch (_) {}
+			// Close profile modal
+			const modal = document.getElementById('profile-modal');
+			if (modal) modal.classList.add('hidden');
+			// Offer to sign in again
+			openAuthModal();
+		}
+
+		function renderToolForm(tool) {
+			if (tool === 'budget') {
+				return `
+					<h3 class="text-2xl font-bold mb-4">Budget Sensei</h3>
+					<form id="budget-form" class="space-y-4">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div>
+								<label class="text-sm font-medium">Project Type</label>
+								<select name="project_type" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3">
+									<option value="residential">Residential</option>
+									<option value="commercial">Commercial</option>
+									<option value="industrial">Industrial</option>
+									<option value="infrastructure">Infrastructure</option>
+								</select>
+							</div>
+							<div>
+								<label class="text-sm font-medium">Built-up Area (sqm)</label>
+								<input name="built_up_area_sqm" type="number" min="0" step="1" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" required />
+							</div>
+							<div>
+								<label class="text-sm font-medium">Storeys</label>
+								<input name="num_storeys" type="number" min="1" step="1" value="1" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+							</div>
+							<div>
+								<label class="text-sm font-medium">Finish Level</label>
+								<select name="finish_level" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3">
+									<option value="basic">Basic</option>
+									<option value="standard" selected>Standard</option>
+									<option value="premium">Premium</option>
+								</select>
+							</div>
+							<div>
+								<label class="text-sm font-medium">Location</label>
+								<input name="location" type="text" value="Kampala" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+							</div>
+						</div>
+						<button type="submit" class="btn-primary">Estimate</button>
+					</form>
+					<div id="budget-result" class="mt-6 text-sm"></div>
+				`;
+			}
+			if (tool === 'sketch') {
+				return `
+					<h3 class="text-2xl font-bold mb-4">Inspiration Sketch Pad</h3>
+					<form id="sketch-form" class="space-y-4">
+						<div>
+							<label class="text-sm font-medium">Prompt / Notes</label>
+							<textarea name="prompt" rows="3" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 p-3"></textarea>
+						</div>
+						<div>
+							<label class="text-sm font-medium">Reference Images (URLs)</label>
+							<input name="reference_urls" type="text" placeholder="https://example.com/img1.jpg, https://..." class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+						</div>
+						<button type="submit" class="btn-primary">Generate</button>
+					</form>
+					<div id="sketch-result" class="mt-6 text-sm"></div>
+				`;
+			}
+			if (tool === 'style-fusion') {
+				return `
+					<h3 class="text-2xl font-bold mb-4">Style Fusion</h3>
+					<form id="style-form" class="space-y-4">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div>
+								<label class="text-sm font-medium">Styles (comma-separated)</label>
+								<input name="styles" type="text" placeholder="Modern, Scandinavian" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+							</div>
+							<div>
+								<label class="text-sm font-medium">Primary Material</label>
+								<input name="material" type="text" placeholder="Concrete, Wood, Glass" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+							</div>
+						</div>
+						<button type="submit" class="btn-primary">Suggest</button>
+					</form>
+					<div id="style-result" class="mt-6 text-sm"></div>
+				`;
+			}
+			if (tool === 'site-scout') {
+				return `
+					<h3 class="text-2xl font-bold mb-4">Virtual Site Scout</h3>
+					<form id="scout-form" class="space-y-4">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div class="md:col-span-2">
+								<label class="text-sm font-medium">Site Address or Description</label>
+								<input name="site" type="text" placeholder="Plot 12, Kampala or coordinates..." class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+							</div>
+							<div>
+								<label class="text-sm font-medium">Area of Interest</label>
+								<input name="aoi" type="text" placeholder="e.g., 1km radius" class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 h-11 px-3" />
+							</div>
+						</div>
+						<button type="submit" class="btn-primary">Analyze</button>
+					</form>
+					<div id="scout-result" class="mt-6 text-sm"></div>
+				`;
+			}
+			return '<p>Unknown tool.</p>';
+		}
+
+		async function submitBudgetForm(e) {
+			e.preventDefault();
+			const form = e.target;
+			const formData = Object.fromEntries(new FormData(form).entries());
+			const email = localStorage.getItem('teiha_user_email') || '';
+			try {
+				const res = await fetch(`${TOOL_API_BASE}/budget`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, ...formData })
+				});
+				const data = await res.json();
+				document.getElementById('budget-result').innerHTML = `<pre class="whitespace-pre-wrap text-sm">${JSON.stringify(data, null, 2)}</pre>`;
+			} catch (err) {
+				document.getElementById('budget-result').textContent = 'Failed to estimate. Please try again.';
+			}
+		}
+
+		async function submitSketchForm(e) {
+			e.preventDefault();
+			const form = e.target;
+			const formData = Object.fromEntries(new FormData(form).entries());
+			const email = localStorage.getItem('teiha_user_email') || '';
+			try {
+				const res = await fetch(`${TOOL_API_BASE}/sketch`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, ...formData })
+				});
+				const data = await res.json();
+				document.getElementById('sketch-result').innerHTML = `<pre class="whitespace-pre-wrap text-sm">${JSON.stringify(data, null, 2)}</pre>`;
+			} catch (err) {
+				document.getElementById('sketch-result').textContent = 'Failed to generate. Please try again.';
+			}
+		}
+
+		async function submitStyleForm(e) {
+			e.preventDefault();
+			const form = e.target;
+			const formData = Object.fromEntries(new FormData(form).entries());
+			const email = localStorage.getItem('teiha_user_email') || '';
+			try {
+				const res = await fetch(`${TOOL_API_BASE}/style-fusion`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, ...formData })
+				});
+				const data = await res.json();
+				document.getElementById('style-result').innerHTML = `<pre class="whitespace-pre-wrap text-sm">${JSON.stringify(data, null, 2)}</pre>`;
+			} catch (err) {
+				document.getElementById('style-result').textContent = 'Failed to suggest. Please try again.';
+			}
+		}
+
+		async function submitScoutForm(e) {
+			e.preventDefault();
+			const form = e.target;
+			const formData = Object.fromEntries(new FormData(form).entries());
+			const email = localStorage.getItem('teiha_user_email') || '';
+			try {
+				const res = await fetch(`${TOOL_API_BASE}/site-scout`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, ...formData })
+				});
+				const data = await res.json();
+				document.getElementById('scout-result').innerHTML = `<pre class="whitespace-pre-wrap text-sm">${JSON.stringify(data, null, 2)}</pre>`;
+			} catch (err) {
+				document.getElementById('scout-result').textContent = 'Failed to analyze. Please try again.';
+			}
+		}
+
+		// Chat Assistant
+		const CHAT_API_URL = 'http://localhost:8000/api/chat';
+		let CHATBOT_SESSION_ID = localStorage.getItem('teiha_chat_session_id') || '';
+
+		function toggleChatbot() {
+			const panel = document.getElementById('chatbot-panel');
+			if (!panel) return;
+			const isHidden = panel.classList.contains('hidden');
+			if (isHidden) {
+				panel.classList.remove('hidden');
+				panel.classList.add('animate-scale-up');
+				setTimeout(() => panel.classList.remove('animate-scale-up'), 250);
+				setTimeout(() => {
+					const input = document.getElementById('chatbot-input');
+					if (input) input.focus();
+				}, 50);
+			} else {
+				panel.classList.add('hidden');
+			}
+		}
+
+		function appendMessage(role, text) {
+			const container = document.getElementById('chatbot-messages');
+			if (!container) return;
+			const wrapper = document.createElement('div');
+			wrapper.className = 'flex gap-3 items-start ' + (role === 'user' ? 'justify-end' : '');
+			if (role === 'user') {
+				wrapper.innerHTML = `
+					<div class="max-w-[75%] rounded-2xl rounded-tr-none bg-blue-600 text-white px-4 py-2 text-sm shadow">${text}</div>
+					<div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0"><i class="fas fa-user text-sm"></i></div>
+				`;
+			} else {
+				wrapper.innerHTML = `
+					<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0"><i class="fas fa-robot text-sm"></i></div>
+					<div class="max-w-[75%] rounded-2xl rounded-tl-none bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm shadow">${text}</div>
+				`;
+			}
+			container.appendChild(wrapper);
+			container.scrollTop = container.scrollHeight;
+		}
+
+		function showTyping() {
+			const container = document.getElementById('chatbot-messages');
+			if (!container) return null;
+			const wrapper = document.createElement('div');
+			wrapper.className = 'flex gap-3 items-start';
+			wrapper.innerHTML = `
+				<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0"><i class="fas fa-robot text-sm"></i></div>
+				<div class="max-w-[75%] rounded-2xl rounded-tl-none bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm shadow animate-pulse">Typing…</div>
+			`;
+			container.appendChild(wrapper);
+			container.scrollTop = container.scrollHeight;
+			return wrapper;
+		}
+
+		function replaceTyping(wrapper, text) {
+			if (!wrapper) return;
+			const bubbles = wrapper.querySelectorAll('div');
+			if (bubbles && bubbles.length >= 2) {
+				bubbles[1].classList.remove('animate-pulse');
+				bubbles[1].textContent = text || '...';
+			}
+		}
+
+		async function sendChatMessage(msg) {
+			if (!msg) return;
+			appendMessage('user', msg);
+			const typing = showTyping();
+			try {
+				const res = await fetch(CHAT_API_URL, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ session_id: CHATBOT_SESSION_ID, message: msg }),
+				});
+				const data = await res.json();
+				if (data && data.session_id && !CHATBOT_SESSION_ID) {
+					CHATBOT_SESSION_ID = data.session_id;
+					localStorage.setItem('teiha_chat_session_id', CHATBOT_SESSION_ID);
+				}
+				replaceTyping(typing, (data && data.reply) ? data.reply : '...');
+			} catch (err) {
+				replaceTyping(typing, 'Sorry, I couldn\'t reach the assistant right now.');
+			}
+		}
+
+		function sendQuick(text) {
+			const input = document.getElementById('chatbot-input');
+			if (input) input.value = '';
+			sendChatMessage(text);
+		}
+
+		async function submitChatbotForm(e) {
+			e.preventDefault();
+			const input = document.getElementById('chatbot-input');
+			if (!input) return false;
+			const msg = input.value.trim();
+			if (!msg) return false;
+			input.value = '';
+			sendChatMessage(msg);
+			return false;
+		}
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && aiMobileNav && !aiMobileNav.classList.contains('hidden')) {
+				setAiMobileNav(false);
+			}
+		});
+	</script>
+</body>
+</html>
+
+
