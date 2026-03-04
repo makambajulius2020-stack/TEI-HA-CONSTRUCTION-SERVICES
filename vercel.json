@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "ai-tools.html", "use": "@vercel/static" },
+    { "src": "pricing.html", "use": "@vercel/static" },
+    { "src": "images/**", "use": "@vercel/static" },
+    { "src": "building.jpg", "use": "@vercel/static" }
+  ]
+}
